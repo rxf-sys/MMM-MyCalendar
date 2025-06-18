@@ -1,15 +1,15 @@
 /* MagicMirror²
  * Node Helper: Calendar - CalendarFetcher
  *
- * By Michael Teeuw https://michaelteeuw.nl
+ * By rxf-sys
  * MIT Licensed.
  */
 const CalendarUtils = require("./calendarutils");
 const Log = require("logger");
 const NodeHelper = require("node_helper");
 const ical = require("node-ical");
-const fetch = require("fetch");
-const digest = require("digest-fetch");
+/*const fetch = require("fetch");*/
+/*const digest = require("digest-fetch");*/
 const https = require("https");
 
 /**
@@ -38,7 +38,7 @@ const CalendarFetcher = function (url, reloadInterval, excludedEvents, maximumEn
 		clearTimeout(reloadTimer);
 		reloadTimer = null;
 		const nodeVersion = Number(process.version.match(/^v(\d+\.\d+)/)[1]);
-		let fetcher = null;
+/*		let fetcher = null;*/
 		let httpsAgent = null;
 		let headers = {
 			"User-Agent": "Mozilla/5.0 (Node.js " + nodeVersion + ") MagicMirror/" + global.version
@@ -52,17 +52,17 @@ const CalendarFetcher = function (url, reloadInterval, excludedEvents, maximumEn
 		if (auth) {
 			if (auth.method === "bearer") {
 				headers.Authorization = "Bearer " + auth.pass;
-			} else if (auth.method === "digest") {
-				fetcher = new digest(auth.user, auth.pass).fetch(url, { headers: headers, agent: httpsAgent });
+/*			} else if (auth.method === "digest") {
+				fetcher = new digest(auth.user, auth.pass).fetch(url, { headers: headers, agent: httpsAgent });*/
 			} else {
 				headers.Authorization = "Basic " + Buffer.from(auth.user + ":" + auth.pass).toString("base64");
 			}
 		}
-		if (fetcher === null) {
+/*		if (fetcher === null) {
 			fetcher = fetch(url, { headers: headers, agent: httpsAgent });
-		}
+		}*/
 
-		fetcher
+		fetch(url, { headers: headers, agent: httpsAgent })
 			.then(NodeHelper.checkFetchStatus)
 			.then((response) => response.text())
 			.then((responseData) => {
